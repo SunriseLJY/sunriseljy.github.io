@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我的技术博客 | GitHub Pages</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #003366;
+            --secondary-color: #0059b3;
+            --accent-color: #0077cc;
+            --light-color: #e6f0ff;
+            --text-dark: #333;
+            --text-light: #fff;
+            --bg-light: #f8f9fa;
+            --border-color: #dee2e6;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--text-dark);
+            background-color: #f0f4f8;
+            padding-bottom: 40px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary-color), #001a33);
+            color: var(--text-light);
+            padding: 2rem 0;
+            text-align: center;
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+        }
+        
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+        }
+        
+        .logo i {
+            font-size: 2.5rem;
+            margin-right: 15px;
+            color: #4da6ff;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .search-box {
+            flex: 1;
+            max-width: 400px;
+            position: relative;
+        }
+        
+        .search-box input {
+            width: 100%;
+            padding: 12px 20px 12px 45px;
+            border: 2px solid var(--border-color);
+            border-radius: 50px;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+        
+        .search-box input:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(0, 119, 204, 0.2);
+        }
+        
+        .search-box i {
+            position: absolute;
+            left: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #6c757d;
+        }
+        
+        .view-toggle {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .view-toggle button {
+            background: var(--light-color);
+            border: 2px solid var(--border-color);
+            padding: 8px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+        
+        .view-toggle button.active {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+        
+        .view-toggle button:hover {
+            background: var(--accent-color);
+            color: white;
+            border-color: var(--accent-color);
+        }
+        
+        .blog-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+        }
+        
+        .blog-table th {
+            background-color: var(--primary-color);
+            color: white;
+            text-align: left;
+            padding: 16px 20px;
+            font-weight: 600;
+        }
+        
+        .blog-table td {
+            padding: 15px 20px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .blog-table tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .blog-table tr:hover {
+            background-color: var(--light-color);
+        }
+        
+        .blog-table .title {
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+        
+        .blog-table a {
+            color: var(--secondary-color);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        
+        .blog-table a:hover {
+            color: var(--accent-color);
+            text-decoration: underline;
+        }
+        
+        .status {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+        
+        .status.published {
+            background-color: #e6f7ee;
+            color: #0f9d58;
+        }
+        
+        .status.draft {
+            background-color: #fef7e0;
+            color: #f4b400;
+        }
+        
+        /* Grid View */
+        .blog-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 2rem;
+            display: none;
+        }
+        
+        .blog-card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .blog-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+        }
+        
+        .card-header {
+            background: var(--primary-color);
+            color: white;
+            padding: 15px 20px;
+        }
+        
+        .card-header h3 {
+            font-size: 1.3rem;
+            margin: 0;
+        }
+        
+        .card-body {
+            padding: 20px;
+        }
+        
+        .card-meta {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            font-size: 0.9rem;
+            color: #6c757d;
+        }
+        
+        .card-content {
+            margin-bottom: 20px;
+            color: #555;
+        }
+        
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            background: var(--bg-light);
+            border-top: 1px solid var(--border-color);
+        }
+        
+        .read-more {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background 0.3s;
+        }
+        
+        .read-more:hover {
+            background: var(--secondary-color);
+        }
+        
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 30px;
+        }
+        
+        .pagination button {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: none;
+            background: var(--light-color);
+            color: var(--text-dark);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .pagination button.active {
+            background: var(--primary-color);
+            color: white;
+        }
+        
+        .pagination button:hover:not(.active) {
+            background: var(--accent-color);
+            color: white;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 3rem;
+            color: #6c757d;
+            font-size: 0.95rem;
+        }
+        
+        @media (max-width: 768px) {
+            .controls {
+                flex-direction: column;
+            }
+            
+            .search-box {
+                max-width: 100%;
+            }
+            
+            .view-toggle {
+                align-self: flex-end;
+            }
+            
+            .blog-table {
+                display: none;
+            }
+            
+            .blog-grid {
+                display: grid;
+            }
+            
+            .blog-table thead {
+                display: none;
+            }
+            
+            .blog-table, .blog-table tbody, .blog-table tr, .blog-table td {
+                display: block;
+                width: 100%;
+            }
+            
+            .blog-table tr {
+                margin-bottom: 15px;
+                border-radius: 10px;
+                overflow: hidden;
+                box-shadow: var(--shadow);
+            }
+            
+            .blog-table td {
+                text-align: right;
+                padding-left: 50%;
+                position: relative;
+                border-bottom: 1px solid var(--border-color);
+            }
+            
+            .blog-table td:last-child {
+                border-bottom: none;
+            }
+            
+            .blog-table td::before {
+                content: attr(data-label);
+                position: absolute;
+                left: 20px;
+                width: calc(50% - 20px);
+                padding-right: 10px;
+                text-align: left;
+                font-weight: 600;
+                color: var(--primary-color);
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <div class="logo">
+                <i class="fas fa-laptop-code"></i>
+                <h1>技术探索者</h1>
+            </div>
+            <p class="subtitle">分享Web开发、JavaScript、Python及前沿技术文章</p>
+        </div>
+    </header>
+    
+    <div class="container">
+        <div class="controls">
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" id="searchInput" placeholder="搜索博客文章...">
+            </div>
+            <div class="view-toggle">
+                <button id="tableViewBtn" class="active"><i class="fas fa-table"></i> 表格视图</button>
+                <button id="gridViewBtn"><i class="fas fa-th-large"></i> 网格视图</button>
+            </div>
+        </div>
+        
+        <!-- Table View -->
+        <table class="blog-table" id="blogTable">
+            <thead>
+                <tr>
+                    <th>标题</th>
+                    <th>分类</th>
+                    <th>发布日期</th>
+                    <th>状态</th>
+                    <th>阅读</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="title" data-label="标题">深入理解JavaScript闭包</td>
+                    <td data-label="分类">JavaScript</td>
+                    <td data-label="发布日期">2023-09-15</td>
+                    <td data-label="状态"><span class="status published">已发布</span></td>
+                    <td data-label="阅读"><a href="#">阅读全文</a></td>
+                </tr>
+                <tr>
+                    <td class="title" data-label="标题">CSS Grid布局完全指南</td>
+                    <td data-label="分类">CSS</td>
+                    <td data-label="发布日期">2023-09-10</td>
+                    <td data-label="状态"><span class="status published">已发布</span></td>
+                    <td data-label="阅读"><a href="#">阅读全文</a></td>
+                </tr>
+                <tr>
+                    <td class="title" data-label="标题">React Hooks最佳实践</td>
+                    <td data-label="分类">React</td>
+                    <td data-label="发布日期">2023-09-05</td>
+                    <td data-label="状态"><span class="status published">已发布</span></td>
+                    <td data-label="阅读"><a href="#">阅读全文</a></td>
+                </tr>
+                <tr>
+                    <td class="title" data-label="标题">Python异步编程详解</td>
+                    <td data-label="分类">Python</td>
+                    <td data-label="发布日期">2023-08-28</td>
+                    <td data-label="状态"><span class="status published">已发布</span></td>
+                    <td data-label="阅读"><a href="#">阅读全文</a></td>
+                </tr>
+                <tr>
+                    <td class="title" data-label="标题">TypeScript高级类型技巧</td>
+                    <td data-label="分类">TypeScript</td>
+                    <td data-label="发布日期">2023-08-20</td>
+                    <td data-label="状态"><span class="status published">已发布</span></td>
+                    <td data-label="阅读"><a href="#">阅读全文</a></td>
+                </tr>
+                <tr>
+                    <td class="title" data-label="标题">Git高级工作流解析</td>
+                    <td data-label="分类">工具</td>
+                    <td data-label="发布日期">2023-08-12</td>
+                    <td data-label="状态"><span class="status published">已发布</span></td>
+                    <td data-label="阅读"><a href="#">阅读全文</a></td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <!-- Grid View -->
+        <div class="blog-grid" id="blogGrid">
+            <div class="blog-card">
+                <div class="card-header">
+                    <h3>深入理解JavaScript闭包</h3>
+                </div>
+                <div class="card-body">
+                    <div class="card-meta">
+                        <span><i class="fas fa-tag"></i> JavaScript</span>
+                        <span><i class="fas fa-calendar"></i> 2023-09-15</span>
+                    </div>
+                    <div class="card-content">
+                        闭包是JavaScript中一个强大且常被误解的概念。本文将深入探讨闭包的工作原理及其实际应用场景。
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <span class="status published">已发布</span>
+                    <button class="read-more">阅读全文</button>
+                </div>
+            </div>
+            
+            <div class="blog-card">
+                <div class="card-header">
+                    <h3>CSS Grid布局完全指南</h3>
+                </div>
+                <div class="card-body">
+                    <div class="card-meta">
+                        <span><i class="fas fa-tag"></i> CSS</span>
+                        <span><i class="fas fa-calendar"></i> 2023-09-10</span>
+                    </div>
+                    <div class="card-content">
+                        彻底掌握CSS Grid布局系统，学习如何创建复杂、响应式的网页布局。
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <span class="status published">已发布</span>
+                    <button class="read-more">阅读全文</button>
+                </div>
+            </div>
+            
+            <div class="blog-card">
+                <div class="card-header">
+                    <h3>React Hooks最佳实践</h3>
+                </div>
+                <div class="card-body">
+                    <div class="card-meta">
+                        <span><i class="fas fa-tag"></i> React</span>
+                        <span><i class="fas fa-calendar"></i> 2023-09-05</span>
+                    </div>
+                    <div class="card-content">
+                        探索React Hooks的高级用法，避免常见陷阱，构建更可靠、可维护的React应用。
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <span class="status published">已发布</span>
+                    <button class="read-more">阅读全文</button>
+                </div>
+            </div>
+            
+            <div class="blog-card">
+                <div class="card-header">
+                    <h3>Python异步编程详解</h3>
+                </div>
+                <div class="card-body">
+                    <div class="card-meta">
+                        <span><i class="fas fa-tag"></i> Python</span>
+                        <span><i class="fas fa-calendar"></i> 2023-08-28</span>
+                    </div>
+                    <div class="card-content">
+                        深入理解Python的async/await语法，掌握异步编程模型，提高程序性能。
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <span class="status published">已发布</span>
+                    <button class="read-more">阅读全文</button>
+                </div>
+            </div>
+            
+            <div class="blog-card">
+                <div class="card-header">
+                    <h3>TypeScript高级类型技巧</h3>
+                </div>
+                <div class="card-body">
+                    <div class="card-meta">
+                        <span><i class="fas fa-tag"></i> TypeScript</span>
+                        <span><i class="fas fa-calendar"></i> 2023-08-20</span>
+                    </div>
+                    <div class="card-content">
+                        学习TypeScript的高级类型系统，包括条件类型、映射类型和类型推断等高级特性。
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <span class="status published">已发布</span>
+                    <button class="read-more">阅读全文</button>
+                </div>
+            </div>
+            
+            <div class="blog-card">
+                <div class="card-header">
+                    <h3>Git高级工作流解析</h3>
+                </div>
+                <div class="card-body">
+                    <div class="card-meta">
+                        <span><i class="fas fa-tag"></i> 工具</span>
+                        <span><i class="fas fa-calendar"></i> 2023-08-12</span>
+                    </div>
+                    <div class="card-content">
+                        探索Git的高级工作流，包括Gitflow、Forking工作流等，优化团队协作效率。
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <span class="status published">已发布</span>
+                    <button class="read-more">阅读全文</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="pagination">
+            <button class="active">1</button>
+            <button>2</button>
+            <button>3</button>
+            <button><i class="fas fa-chevron-right"></i></button>
+        </div>
+    </div>
+    
+    <footer>
+        <p>© 2023 技术探索者 | 使用GitHub Pages托管</p>
+    </footer>
+    
+    <script>
+        // 视图切换功能
+        const tableViewBtn = document.getElementById('tableViewBtn');
+        const gridViewBtn = document.getElementById('gridViewBtn');
+        const blogTable = document.getElementById('blogTable');
+        const blogGrid = document.getElementById('blogGrid');
+        
+        tableViewBtn.addEventListener('click', () => {
+            blogTable.style.display = 'table';
+            blogGrid.style.display = 'none';
+            tableViewBtn.classList.add('active');
+            gridViewBtn.classList.remove('active');
+        });
+        
+        gridViewBtn.addEventListener('click', () => {
+            blogTable.style.display = 'none';
+            blogGrid.style.display = 'grid';
+            tableViewBtn.classList.remove('active');
+            gridViewBtn.classList.add('active');
+        });
+        
+        // 搜索功能
+        const searchInput = document.getElementById('searchInput');
+        const tableRows = document.querySelectorAll('.blog-table tbody tr');
+        const gridCards = document.querySelectorAll('.blog-card');
+        
+        searchInput.addEventListener('input', () => {
+            const searchTerm = searchInput.value.toLowerCase();
+            
+            // 表格视图搜索
+            tableRows.forEach(row => {
+                const title = row.querySelector('.title').textContent.toLowerCase();
+                row.style.display = title.includes(searchTerm) ? '' : 'none';
+            });
+            
+            // 网格视图搜索
+            gridCards.forEach(card => {
+                const title = card.querySelector('.card-header h3').textContent.toLowerCase();
+                card.style.display = title.includes(searchTerm) ? '' : 'none';
+            });
+        });
+        
+        // 移动设备默认显示网格视图
+        if (window.innerWidth <= 768) {
+            blogTable.style.display = 'none';
+            blogGrid.style.display = 'grid';
+            tableViewBtn.classList.remove('active');
+            gridViewBtn.classList.add('active');
+        }
+        
+        // 阅读全文按钮事件
+        document.querySelectorAll('.read-more').forEach(button => {
+            button.addEventListener('click', function() {
+                const cardTitle = this.closest('.blog-card').querySelector('h3').textContent;
+                alert(`即将打开文章: ${cardTitle}`);
+                // 实际应用中这里应该是 window.location.href = '文章链接';
+            });
+        });
+    </script>
+</body>
+</html>
